@@ -1,9 +1,9 @@
 //var app;  연산자가 없어서 선언     선언과 할당을 함꼐하는것 초기화
-var app = (function(){    //바깥펑션은 앱이고 안쪽펑션은 init 
-    let init = function(){
+var app = (()=>{    //바깥펑션은 앱이고 안쪽펑션은 init 
+    let init = ()=>{
         login_form();
     }  
-    let login_form = function(){       
+    let login_form = ()=>{       
         let wrapper = document.querySelector('#wrapper');  //js에서 객체가됨(컴포넌트)
         wrapper.innerHTML = '<form action="/action_page.php">'
         +'  First name:<br>'
@@ -16,13 +16,13 @@ var app = (function(){    //바깥펑션은 앱이고 안쪽펑션은 init
         +'  <input id="join_btn" type="button" value="JOIN">'
         +'</form> ';   
         let join_btn = document.querySelector('#join_btn');
-        join_btn.addEventListener('click', function(){
+        join_btn.addEventListener('click', ()=>{
             join_form();
         });       
     }  
 
 
-    let join_form = function(){
+    let join_form = ()=>{
         let wrapper = document.querySelector('#wrapper');
         wrapper.innerHTML = '<form action="/action_page.php">'
         +' First name:<br>'
@@ -45,7 +45,7 @@ var app = (function(){    //바깥펑션은 앱이고 안쪽펑션은 init
         +' <input type="button" value="JOIN" id="join_btn">'
         +'</form> ';
         let login_btn = document.querySelector('#login_btn');
-        login_btn.addEventListener('click', function(){
+        login_btn.addEventListener('click', ()=>{
             login_form();
         })
     } 
