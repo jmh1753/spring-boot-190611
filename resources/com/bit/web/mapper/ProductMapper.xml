@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.web.mapper.ProductMapper"> 
+
+    <insert id="insertProduct" parameterType="com.bit.web.domain.ProductDTO">
+        insert into PRODUCTS (PRODUCT_ID, PRODUCT_NAME, SUPPLIER_ID, CATEGORY_ID, UNIT, PRICE)
+        values (#{productId},#{productName},#{supplierId},#{categoryId},#{unit},#{price})
+    </insert>
+
+    <select id="selectProducts" resultType="com.bit.web.domain.ProductDTO">
+        select * from PRODUCTS 
+    </select>
+
+    <select id="selectProductsByOption" resultType="com.bit.web.domain.ProductDTO" parameterType="com.bit.web.domain.ProductDTO">
+      select * from PRODUCTS where PRODUCT_NAME = #{productName}
+    </select>
+
+    <select id="selectProductByProductId" resultType="com.bit.web.domain.ProductDTO" parameterType="string">
+        select * from PRODUCTS where PRODUCT_ID = #{value}
+    </select> 
+
+    <update id="updateProduct" parameterType="com.bit.web.domain.ProductDTO">
+        update PRODUCTS set
+        PRODUCT_NAME = #{productName},
+        SUPPLIER_ID = #{supplierId}, 
+        CATEGORY_ID = #{categoryId},
+        UNIT = #{unit},
+        PRICE = #{price}   
+        where PRODUCT_ID = #{productId}
+    </update>
+
+    <delete id="deleteProduct" parameterType="com.bit.web.domain.ProductDTO">
+        delete from PRODUCTS where PRODUCT_ID = #{productId}
+    </delete>
+
+</mapper>
