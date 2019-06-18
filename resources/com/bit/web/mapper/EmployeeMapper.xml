@@ -3,22 +3,32 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bit.web.mapper.CategoryMapper"> 
+
+
+<mapper namespace="com.bit.web.mapper.EmployeeMapper"> 
+<resultMap id = "employeeMap" type="com.bit.web.domain.EmployeeDTO">
+    <id property="employeeId" column = "EMPLOYEE_ID"/>
+    <result property = "manager" column="MANAGER"/>
+    <result property = "name" column="NAME"/>
+    <result property = "birthDate" column="BIRTH_DATE"/>
+    <result property = "photo" column="PHOTO"/>
+    <result property = "notes" column="NOTES"/>
+</resultMap>
 
     <insert id="insertEmployee" parameterType="com.bit.web.domain.EmployeeDTO">
         insert into EMPLOYEES (EMPLOYEE_ID, MANAGER, NAME, BIRTH_DATE, PHOTO, NOTES)
         values (#{employeeId},#{manager},#{name},#{birthDate},#{photo},#{notes})
     </insert>
 
-    <select id="selectEmployees" resultType="com.bit.web.domain.EmployeeDTO">
+    <select id="selectEmployees" resultMap="employeeMap">
         select * from EMPLOYEES 
     </select>
 
-    <select id="selectEmployeesByOption" resultType="com.bit.web.domain.EmployeeDTO" parameterType="com.bit.web.domain.EmployeeDTO">
+    <select id="selectEmployeesByOption" resultMap="employeeMap" parameterType="com.bit.web.domain.EmployeeDTO">
       select * from EMPLOYEES where NAME = #{name}
     </select>
 
-    <select id="selectEmployeeByemployeeId" resultType="com.bit.web.domain.EmployeeDTO" parameterType="string">
+    <select id="selectEmployeeByemployeeId" resultMap="employeeMap" parameterType="string">
         select * from EMPLOYEES where EMPLOYEE_ID = #{value}
     </select> 
 

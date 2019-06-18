@@ -3,24 +3,56 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
+
 <mapper namespace="com.bit.web.mapper.CustomerMapper"> 
+    <resultMap id = "customerMap" type="com.bit.web.domain.CustomerDTO">
+    <id property="customerId" column = "CUSTOMER_ID"/>
+    <result property = "customerName" column="CUSTOMER_NAME"/>
+    <result property = "password" column="PASSWORD"/>
+    <result property = "ssn" column="SSN"/>
+    <result property = "phone" column="PHONE"/>
+    <result property = "city" column="CITY"/>
+    <result property = "address" column="ADDRESS"/>
+    <result property = "postalcode" column="POSTALCODE"/>
+    <result property = "photo" column="PHOTO"/>
+</resultMap>
+
 
     <insert id="insertCustomer" parameterType="com.bit.web.domain.CustomerDTO">
         insert into CUSTOMERS (CUSTOMER_ID, CUSTOMER_NAME, PASSWORD, SSN, PHONE, CITY, ADDRESS, POSTALCODE, PHOTO)
         values (#{customerId},#{customerName},#{password},#{ssn},#{phone},#{city},#{address},#{postalcode},#{photo})
     </insert>
 
-    <select id="selectCustomers" resultType="com.bit.web.domain.CustomerDTO">
+    <select id="selectCustomers" resultMap="customerMap">
         select * from CUSTOMERS 
     </select>
 
-    <select id="selectCustomersByOption" resultType="com.bit.web.domain.CustomerDTO" parameterType="com.bit.web.domain.CustomerDTO">
-      select * from CUSTOMERS where CUSTOMER_NAME = #{customerName}
+    <select id="selectCustomersByOption" resultMap="customerMap" parameterType="com.bit.web.domain.CustomerDTO">
+      select * from CUSTOMERS where CUSTOMER_NAME LIKE #{customerName}
     </select>
 
-    <select id="selectCustomerBycustomerId" resultType="com.bit.web.domain.CustomerDTO" parameterType="string">
-        select * from CUSTOMERS where CUSTOMER_ID = #{value}
+    <select id="selectCustomerBycustomerId" resultMap="customerMap" parameterType="string">
+        select * from CUSTOMERS where CUSTOMER_ID LIKE #{value}
     </select> 
+
+
+    <select id="login" resultMap="customerMap" parameterType="com.bit.web.domain.CustomerDTO">
+        select * from CUSTOMERS
+        where CUSTOMER_ID LIKE #{customerId} 
+                and PASSWORD LIKE #{password}
+    </select> 
+
+
+
+
+    <select id="selectCount" resultType="int">
+        select count(*) as count from CUSTOMERS
+    </select>
+
+
+
+
 
     <update id="updateCustomer" parameterType="com.bit.web.domain.CustomerDTO">
         update CUSTOMERS set

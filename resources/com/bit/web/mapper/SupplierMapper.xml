@@ -3,22 +3,35 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+
+
+
 <mapper namespace="com.bit.web.mapper.SupplierMapper"> 
+<resultMap id = "supplierMap" type="com.bit.web.domain.SupplierDTO">
+    <id property="supplierId" column = "SUPPLIER_ID"/>
+    <result property = "supplierName" column="SUPPLIER_NAME"/>
+    <result property = "contactName" column="CONTACT_NAME"/>
+    <result property = "address" column="ADDRESS"/>
+    <result property = "city" column="CITY"/>
+    <result property = "postalCode" column="POSTAL_CODE"/>
+    <result property = "country" column="COUNTRY"/>
+    <result property = "phone" column="PHONE"/>
+</resultMap>
 
     <insert id="insertSupplier" parameterType="com.bit.web.domain.SupplierDTO">
         insert into SUPPLIERS (SUPPLIER_ID, SUPPLIER_NAME, CONTACT_NAME, ADDRESS, CITY, POSTAL_CODE, COUNTRY, PHONE)
         values (#{supplierId},#{supplierName},#{contactName},#{address},#{city},#{postalCode},#{country},#{phone})
     </insert>
 
-    <select id="selectSuppliers" resultType="com.bit.web.domain.SupplierDTO">
+    <select id="selectSuppliers" resultMap="supplierMap">
         select * from SUPPLIERS 
     </select>
 
-    <select id="selectSuppliersByOption" resultType="com.bit.web.domain.SupplierDTO" parameterType="com.bit.web.domain.SupplierDTO">
+    <select id="selectSuppliersByOption" resultMap="supplierMap" parameterType="com.bit.web.domain.SupplierDTO">
       select * from SUPPLIERS where SUPPLIER_NAME = #{supplierName}
     </select>
 
-    <select id="selectSupplierBySupplierId" resultType="com.bit.web.domain.SupplierDTO" parameterType="string">
+    <select id="selectSupplierBySupplierId" resultMap="supplierMap" parameterType="string">
         select * from SUPPLIERS where SUPPLIER_ID = #{supplierId}
     </select> 
 

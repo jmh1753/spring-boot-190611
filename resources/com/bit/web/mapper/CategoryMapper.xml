@@ -4,21 +4,27 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bit.web.mapper.CategoryMapper"> 
+    <resultMap id = "categoryMap" type="com.bit.web.domain.CategoryDTO">
+        <id property="categoryId" column = "CATEGORY_ID"/>
+        <result property = "categoryName" column="CATEGORY_NAME"/>
+        <result property = "description" column="DESCRIPTION"/>
+    </resultMap>
+
 
     <insert id="insertCategory" parameterType="com.bit.web.domain.CategoryDTO">
         insert into CATEGORIES (CATEGORY_ID, CATEGORY_NAME, DESCRIPTION)
         values (#{categoryId},#{categoryName},#{description})
     </insert>
 
-    <select id="selectCategories" resultType="com.bit.web.domain.CategoryDTO">
+    <select id="selectCategories" resultMap="categoryMap">
         select * from CATEGORIES 
     </select>
 
-    <select id="selectCategoriesByOption" resultType="com.bit.web.domain.CategoryDTO" parameterType="com.bit.web.domain.CategoryDTO">
+    <select id="selectCategoriesByOption" resultMap="categoryMap" parameterType="com.bit.web.domain.CategoryDTO">
       select * from CATEGORIES where CATEGORY_NAME = #{categoryName}
     </select>
 
-    <select id="findCategoryBycategoryId" resultType="com.bit.web.domain.CategoryDTO" parameterType="string">
+    <select id="findCategoryBycategoryId" resultMap="categoryMap" parameterType="string">
         select * from CATEGORIES where CATEGORY_ID = #{value}
     </select> 
 
