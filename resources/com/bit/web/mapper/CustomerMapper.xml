@@ -57,18 +57,18 @@
     <update id="updateCustomer" parameterType="com.bit.web.domain.CustomerDTO">
         update CUSTOMERS set
         CUSTOMER_NAME = #{customerName},
-        PASSWORD = #{password}
-        SSN = #{ssn} 
-        PHONE = #{phone} 
-        CITY = #{city} 
-        ADDRESS = #{address} 
-        POSTALCODE = #{postalcode}    
-        PHOTO = #{photo}
+        PASSWORD = #{password},
+        SSN = #{ssn} ,
+        PHONE = #{phone}, 
+        CITY = #{city},
+        ADDRESS = #{address},
+        POSTALCODE = #{postalcode} 
+ 
         where CUSTOMER_ID = #{customerId}
     </update>
 
     <delete id="deleteCustomer" parameterType="com.bit.web.domain.CustomerDTO">
-        delete from CUSTOMERS where CUSTOMER_ID = #{customerId}
+        delete from CUSTOMERS where CUSTOMER_ID LIKE #{customerId}
     </delete>
 
 </mapper>

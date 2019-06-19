@@ -1,15 +1,19 @@
 package com.bit.web.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.bit.web.domain.CustomerDTO;
 import com.bit.web.service.CustomerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,8 +28,35 @@ public class CustomerController {
     @Autowired CustomerService customerService;
     @Autowired CustomerDTO customer;
     
+    @PostMapping("")
+    public HashMap<String,Object> join(@RequestBody CustomerDTO param){
+        System.out.println("=====post mapping======");
+        HashMap<String,Object> map = new HashMap<>();
+        customer.setCustomerId(param.getCustomerId());
+        customer.setPassword(param.getPassword());
+        customer.setCustomerName(param.getCustomerName());
+        customer.setSsn(param.getSsn());
+        customer.setPhone(param.getPhone());
+        customer.setCity(param.getCity());
+        customer.setAddress(param.getAddress());
+        customer.setPostalcode(param.getPostalcode());
+        customerService.insertCustomer(customer);       
+        map.put("result", "SUCCESS");
+        return map; 
+    }
 
-    @RequestMapping("/count")  //루트 URL
+    @GetMapping("")
+    public List<CustomerDTO> list(){
+        List<CustomerDTO> list = new ArrayList<>();
+        System.out.println("콘솔창에 리스트(고객목록) 나오게하기");
+
+        list = customerService.findCustomers();
+        
+        return list;
+    }
+
+
+    @GetMapping("/count")  //루트 URL
     public String count() {
         System.out.println("CustomerController count() 경로로 들어옴");
         int count = customerService.countAll();
@@ -41,32 +72,50 @@ public class CustomerController {
         return customerService.login(customer); 
     }
 
-    @PostMapping("")
-    public HashMap<String,Object> join(@RequestBody CustomerDTO param){
-        System.out.println("=====post mapping======");
-        System.out.println(param.getCustomerId());
-        System.out.println(param.getPassword());
-        System.out.println(param.getCustomerName());
-        System.out.println(param.getSsn());
-        System.out.println(param.getPhone());
-        System.out.println(param.getCity());
-        System.out.println(param.getAddress());
-        System.out.println(param.getPostalcode());
 
-        HashMap<String,Object> map = new HashMap<>();
 
-        customer.setCustomerId(param.getCustomerId());
-        customer.setPassword(param.getPassword());
-        customer.setCustomerName(param.getCustomerName());
-        customer.setSsn(param.getSsn());
-        customer.setPhone(param.getPhone());
-        customer.setCity(param.getCity());
-        customer.setAddress(param.getAddress());
-        customer.setPostalcode(param.getPostalcode());
+    
 
-        customerService.insertCustomer(customer);
-        
-        map.put("result", "SUCCESS");
-        return map; 
+    @GetMapping("/{customerId}")
+    public CustomerDTO selectCustomer(@PathVariable String customerId) {
+        System.out.println("id 검색진입 : " + customerId);
+        return customerService.findCustomerBycustomerId(customerId);
     }
+
+    @PutMapping("/{customerId}")
+    public CustomerDTO updateCustomer(@RequestBody CustomerDTO param) {
+        System.out.println("수정 할 객체: "+param.toString());
+        
+        //customer.setCustomerId(param.getCustomerId());
+        //customer.setPassword(param.getPassword());
+        //customer.setCustomerName(param.getCustomerName());
+        //customer.setSsn(param.getSsn());
+        //customer.setPhone(param.getPhone());
+        //customer.setCity(param.getCity());
+        //customer.setAddress(param.getAddress());
+        //customer.setPostalcode(param.getPostalcode());
+        int res = customerService.updateCustomer(param);
+        System.out.println("===>" + res);
+        if(res ==1 ){
+            customer = customerService.findCustomerBycustomerId(param.getCustomerId());
+        } else{
+            System.out.println("컨트롤러 수정 실패");
+        }       
+        return customer;
+    }
+
+    @DeleteMapping("/{customerId}")
+    public HashMap<String, Object> deleteCustomer(@PathVariable String customerId) {
+        HashMap<String,Object> map = new HashMap<>();
+        customer.setCustomerId(customerId);
+        customerService.deleteCustomer(customer);
+        map.put("result", "탈퇴성공");
+        return map;
+    }
+
+
+
+  
+
+
 }
