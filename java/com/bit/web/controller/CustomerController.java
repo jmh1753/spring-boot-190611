@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.bit.web.common.util.Printer;
 import com.bit.web.domain.CustomerDTO;
 import com.bit.web.service.CustomerService;
 
@@ -27,10 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class CustomerController {
     @Autowired CustomerService customerService;
     @Autowired CustomerDTO customer;
+    @Autowired Printer p;
     
     @PostMapping("")
     public HashMap<String,Object> join(@RequestBody CustomerDTO param){
         System.out.println("=====post mapping======");
+        System.out.println(param.getCustomerId());
+        System.out.println(param.getPassword());
+        System.out.println(param.getPhone());
+        
         HashMap<String,Object> map = new HashMap<>();
         customer.setCustomerId(param.getCustomerId());
         customer.setPassword(param.getPassword());
@@ -48,10 +54,12 @@ public class CustomerController {
     @GetMapping("")
     public List<CustomerDTO> list(){
         List<CustomerDTO> list = new ArrayList<>();
-        System.out.println("콘솔창에 리스트(고객목록) 나오게하기");
+        //System.out.println("콘솔창에 리스트(고객목록) 나오게하기");
 
-        list = customerService.findCustomers();
-        
+        //list = customerService.findCustomers();
+        //for (CustomerDTO customer : list){
+        //    System.out.println(list);
+        //}
         return list;
     }
 
@@ -60,6 +68,7 @@ public class CustomerController {
     public String count() {
         System.out.println("CustomerController count() 경로로 들어옴");
         int count = customerService.countAll();
+        p.accept("람다가 출력한 고객의 총인원 : " + count);
         System.out.println("고객의 총인원 : " + count);
         return "총 고객수 : "+count+"";  //views에 customer.html이아닌 제이슨으로 바뀜, 주소를 넘기는게 아닌 데이터를 넘김     대신에 받는쪽에서 ajax사용
     }  
