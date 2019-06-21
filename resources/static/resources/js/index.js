@@ -24,7 +24,7 @@ var session = {
     set_value : set_value,
     get_value : get_value
 };
-//customerId customerName ssn phone city
+
 function customer_list_form(){
     return '<h2>고객목록</h2>'+
     '<table id="customer-table">'+
@@ -57,28 +57,29 @@ function init(){
                 e.preventDefault();
                 customer.join();
         });
-});
-document.getElementById('login-btn')
-    .addEventListener('click',e=>{
-        e.preventDefault();
-        alert('로그인 버튼 클릭');
-        customer.login({userid : 'customerId',
-                        domain : 'customers'
-                        });
-});
-document.getElementById('admin-btn')
-    .addEventListener('click',e=>{
-        e.preventDefault();
-        alert('관리자 버튼 클릭');
-        employee.admin_login();
     });
-}
+    document.getElementById('login-btn')
+        .addEventListener('click',e=>{
+            e.preventDefault();
+            alert('로그인 버튼 클릭');
+            customer.login({userid : 'customerId',
+                            domain : 'customers'
+                            });
+    });
+    document.getElementById('admin-btn')
+        .addEventListener('click',e=>{
+            e.preventDefault();
+            alert('관리자 버튼 클릭');
+            employee.admin_login();
+        });
+    }
+    
 function admin_login(){
     let isAdmin = confirm("관리자입니까?");
     if(isAdmin){
         let pass = prompt("관리자 번호를 입력하세요");
         if(pass == 1000){
-            employee.customer_list();
+            employee.customer_list('1');
         }else{
             alert('입력한 번호가 일치하지 않습니다.');
         }
@@ -86,38 +87,78 @@ function admin_login(){
     alert('관리자만 접속이 가능합니다.');  
     }
 }
-function customer_list(){
+
+function create_customer_row(x){
+    return  "<tr><td>"+x.customerId+"</td><td>"+x.customerName+"</td>"+
+    "<td>"+x.ssn+"</td><td>"+x.phone+"</td><td>"+x.city+"</td></tr>";
+}
+
+function customer_list(x){
+    alert(x);
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', 'customers', true);
-    alert("리스트뿌리기");
-    
+    // pageNum, pageSize, blocksize
+ 
+    xhr.open('GET', 'customers/page/'+x, true);
     xhr.onload=()=>{
         if(xhr.readyState=== 4 && xhr.status === 200){
-            //let d = JSON.parse(xhr.responseText);  
+            let d = JSON.parse(xhr.responseText);
             let wrapper = document.querySelector('#wrapper');
             wrapper.innerHTML = employee.customer_list_form();
             let tbody = document.getElementById('tbody');
             let i = 0;
-            let rows = '';
-            for(;i<5; i++){
-                rows += "<tr><td>"+i+"</td><td>"+i+"</td>"+
-                "<td>"+i+"</td><td>"+i+"</td><td>"+i+"</td></tr>"
-            }
-            tbody.innerHTML = rows;
-        
+            d.list.forEach((v, i)=>{
+                tbody.innerHTML+=create_customer_row(v);
+            });
             let blocks = document.createElement('div');
             blocks.setAttribute('id', 'blocks');
             wrapper.appendChild(blocks);
-            let spans = '';
+            let spans = document.createElement('div');
+            //span.setAttribute('style', 'display:inline-block')
             i = 1;
             for(;i<6;i++){
-                spans += "<span style='display:inline-block;padding-right:20px;border: 1px solid black;'>"+i+"</span>";
+                let span = document.createElement('span')
+                span.setAttribute('style','display:inline-block;padding-right:20px;border: 1px solid black');
+                span.setAttribute('class','page-num');
+                span.innerHTML = i;
+                if(x==span.innerHTML){
+                    span.style.backgroundColor = "red";
+                }
+                spans.appendChild(span);
             }
-            blocks.innerHTML=spans;
+            blocks.appendChild(spans);
+            let clss = document.getElementsByClassName('page-num');
+ 
+            // var spanList = blocks.children;
+            i = 0;
+            for(;i<clss.length;i++){
+                (function(i){
+                    clss[i].addEventListener('click',function(){
+                        customer_list(this.innerText)
+                    })
+                })(i)
+            }
+
+
+            if(d.pxy.existPrev){
+                let prevBlock = document.createElement('span');
+                prevBlock.setAttribute('style','display:inline-block;padding-right:20px;border: 1px solid black;');
+                prevBlock.textContent="<";
+                blocks.prepend(prevBlock);
+            }
+     
+            if(d.pxy.existNext){
+                let nextBlock = document.createElement('span');
+                nextBlock.setAttribute('style','display:inline-block;padding-right:20px;border: 1px solid black;');
+                nextBlock.textContent=">";
+                blocks.appendChild(nextBlock);
+            }
+
+
+ 
         }
     };
     xhr.send();
-}
+ }
 
 function join_form(){
     return '<form>'

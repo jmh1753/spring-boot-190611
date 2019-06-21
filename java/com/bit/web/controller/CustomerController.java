@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.bit.web.common.util.PageProxy;
 import com.bit.web.common.util.Printer;
 import com.bit.web.domain.CustomerDTO;
 import com.bit.web.service.CustomerService;
@@ -29,7 +30,8 @@ public class CustomerController {
     @Autowired CustomerService customerService;
     @Autowired CustomerDTO customer;
     @Autowired Printer p;
-    
+    @Autowired PageProxy pxy;
+
     @PostMapping("")
     public HashMap<String,Object> join(@RequestBody CustomerDTO param){
         System.out.println("=====post mapping======");
@@ -51,16 +53,17 @@ public class CustomerController {
         return map; 
     }
 
-    @GetMapping("")
-    public List<CustomerDTO> list(){
-        List<CustomerDTO> list = new ArrayList<>();
-        //System.out.println("콘솔창에 리스트(고객목록) 나오게하기");
-
-        //list = customerService.findCustomers();
-        //for (CustomerDTO customer : list){
-        //    System.out.println(list);
-        //}
-        return list;
+    @GetMapping("/page/{pageNum}")
+    public HashMap<String, Object> list(@PathVariable String pageNum){  
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("totalCount", customerService.countAll());
+        map.put("page_num", pageNum);
+        map.put("page_size", "5");
+        map.put("block_size", "5");
+        pxy.execute(map);          
+        map.put("list", customerService.findCustomers(pxy));
+        map.put("pxy", pxy);
+        return map;
     }
 
 

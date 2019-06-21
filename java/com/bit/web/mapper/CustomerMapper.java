@@ -2,6 +2,7 @@ package com.bit.web.mapper;
 
 import java.util.List;
 
+import com.bit.web.common.util.PageProxy;
 import com.bit.web.domain.CustomerDTO;
 
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerMapper {
     public void insertCustomer(CustomerDTO customer);    
-    public List<CustomerDTO> selectCustomers();
+    public List<CustomerDTO> selectCustomers(PageProxy pxy);
     public List<CustomerDTO> selectCustomersByOption(CustomerDTO option);
     public CustomerDTO selectCustomerBycustomerId(String customerId);
     public int updateCustomer(CustomerDTO customer);

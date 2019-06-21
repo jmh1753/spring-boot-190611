@@ -2,6 +2,7 @@ package com.bit.web.serviceimpl;
 
 import java.util.List;
 
+import com.bit.web.common.util.PageProxy;
 import com.bit.web.domain.CustomerDTO;
 import com.bit.web.mapper.CustomerMapper;
 import com.bit.web.service.CustomerService;
@@ -22,8 +23,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDTO> findCustomers() {
-        return customerMapper.selectCustomers();
+    public List<CustomerDTO> findCustomers(PageProxy pxy) {
+        return customerMapper.selectCustomers(pxy);
     }
 
     @Override
